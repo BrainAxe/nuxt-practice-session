@@ -5,6 +5,7 @@
 export default {
   name: '',
   components: {},
+  layout: 'users',
   // data() {
   //   return {}
   // },
