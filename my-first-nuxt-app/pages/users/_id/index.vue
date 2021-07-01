@@ -8,6 +8,9 @@ export default {
   // data() {
   //   return {}
   // },
+  validate(data) {
+    return /^\d+$/.test(data.params.id);
+  },
   computed: {},
   watch: {},
   mounted() {},
