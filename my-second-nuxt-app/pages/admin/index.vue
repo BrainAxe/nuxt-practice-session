@@ -19,6 +19,7 @@ export default {
     PostList,
     AppButton
   },
+  layout: 'admin'
 }
 </script>
 
