@@ -21,21 +21,25 @@
 
 <script>
 export default {
-  asyncData(context, callback) {
-    // eslint-disable-next-line nuxt/no-timing-in-fetch-data
-    setTimeout(() => {
-      callback(null, {
-        loadedPost: {
-          id: '1',
-          title: 'First Post (ID: ' + context.params.id + ')',
-          previewText: 'This is our first post!',
-          author: 'Tanzim',
-          updatedDate: new Date(),
-          content: 'This is a dummy text',
-          thumbnail: 'https://i.dawn.com/primary/2020/04/5e8b78912bd68.jpg'
-        }
-      });
-    }, 1000);
+  asyncData(context) { 
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line nuxt/no-timing-in-fetch-data
+      setTimeout(() => {
+        resolve({
+          loadedPost: {
+            id: '1',
+            title: 'First Post (ID: ' + context.params.id + ')',
+            previewText: 'This is our first post!',
+            author: 'Tanzim',
+            updatedDate: new Date(),
+            content: 'This is a dummy text',
+            thumbnail: 'https://i.dawn.com/primary/2020/04/5e8b78912bd68.jpg'
+          }
+        });
+      }, 1000);
+    }).then(data => {
+      return data;
+    })
   }
 };
 </script>
