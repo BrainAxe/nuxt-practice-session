@@ -20,26 +20,16 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   asyncData(context) { 
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line nuxt/no-timing-in-fetch-data
-      setTimeout(() => {
-        resolve({
-          loadedPost: {
-            id: '1',
-            title: 'First Post (ID: ' + context.params.id + ')',
-            previewText: 'This is our first post!',
-            author: 'Tanzim',
-            updatedDate: new Date(),
-            content: 'This is a dummy text',
-            thumbnail: 'https://i.dawn.com/primary/2020/04/5e8b78912bd68.jpg'
-          }
-        });
-      }, 1000);
-    }).then(data => {
-      return data;
-    })
+    return axios.get('https://nuxt-blog-cbb7b-default-rtdb.asia-southeast1.firebasedatabase.app/posts/' + context.params.id + '.json') 
+    .then(res => {
+      return {
+        loadedPost: res.data
+      }
+    }).catch(e => context.error(e));
   }
 };
 </script>

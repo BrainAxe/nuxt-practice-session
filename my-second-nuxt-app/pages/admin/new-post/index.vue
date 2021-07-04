@@ -20,7 +20,7 @@ export default {
       axios
         .post(
           'https://nuxt-blog-cbb7b-default-rtdb.asia-southeast1.firebasedatabase.app/posts.json',
-          postData
+          { ...postData, updatedDate: new Date() }
         )
         .then((result) => {
           // eslint-disable-next-line no-console
