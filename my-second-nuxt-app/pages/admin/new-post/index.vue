@@ -23,8 +23,7 @@ export default {
           { ...postData, updatedDate: new Date() }
         )
         .then((result) => {
-          // eslint-disable-next-line no-console
-          console.log(result);
+          this.$route.push('/admin');
         })
         .catch((e) => {
           // eslint-disable-next-line no-console

@@ -1,12 +1,13 @@
 <template>
   <div class="admin-post-page">
     <section class="update-form">
-      <AdminPostForm :post="loadedPost"/>
+      <AdminPostForm :post="loadedPost" @submit="onSubmitted" />
     </section>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
 import AdminPostForm from '@/components/Admin/AdminPostForm.vue';
 
 export default {
@@ -14,17 +15,39 @@ export default {
     AdminPostForm
   },
   layout: 'admin',
-  data() {
-    return {
-      loadedPost: {
-        author: 'Tanzim',
-        title: 'My awesome Post',
-        content: 'Super amazing, thanks for that!',
-        thumbnailLink: 'https://i.dawn.com/primary/2020/04/5e8b78912bd68.jpg'
-      }
+  asyncData(context) {
+    return axios
+      .get(
+        'https://nuxt-blog-cbb7b-default-rtdb.asia-southeast1.firebasedatabase.app/posts/' +
+          context.params.postId +
+          '.json'
+      )
+      .then((res) => {
+        return {
+          loadedPost: res.data
+        };
+      })
+      .catch((e) => context.error(e));
+  },
+  methods: {
+    onSubmitted(editedPost) {
+      axios
+        .put(
+          'https://nuxt-blog-cbb7b-default-rtdb.asia-southeast1.firebasedatabase.app/posts/' +
+            this.$route.params.postId +
+            '.json',
+          editedPost
+        )
+        .then((res) => {
+          this.$route.push('/admin');
+        }) 
+        .catch((e) => {
+          // eslint-disable-next-line no-console
+          console.log(e)
+        });
     }
   }
-}
+};
 </script>
 
 <style scoped>
