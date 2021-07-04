@@ -1,4 +1,6 @@
 import Vuex from 'vuex';
+import axios from 'axios';
+
 
 const createStore = () => {
   return new Vuex.Store({
@@ -12,35 +14,13 @@ const createStore = () => {
     },
     actions: {
       nuxtServerInit(vuexContext, context) {
-        return new Promise((resolve, reject) => {
-          // eslint-disable-next-line nuxt/no-timing-in-fetch-data
-          setTimeout(() => {
-            vuexContext.commit('setPosts', [
-              {
-                id: '1',
-                title: 'First Post',
-                previewText: 'This is our first post!',
-                thumbnail:
-                  'https://i.dawn.com/primary/2020/04/5e8b78912bd68.jpg'
-              },
-              {
-                id: '2',
-                title: 'Second Post',
-                previewText: 'This is our second post!',
-                thumbnail:
-                  'https://i.dawn.com/primary/2020/04/5e8b78912bd68.jpg'
-              },
-              {
-                id: '3',
-                title: 'Third Post',
-                previewText: 'This is our third post!',
-                thumbnail:
-                  'https://i.dawn.com/primary/2020/04/5e8b78912bd68.jpg'
-              }
-            ]);
-            resolve();
-          }, 1000);
-        });
+        return axios.get('https://nuxt-blog-cbb7b-default-rtdb.asia-southeast1.firebasedatabase.app/posts.json').then(res => {
+          const postsArray = [];
+          for (const key in res.data) {
+            postsArray.push({...res.data[key], id: key });
+          }
+          vuexContext.commit('setPosts', postsArray);
+        }).catch(e => context.error(e));
       },
 
       setPosts(vuexContext, posts) {
