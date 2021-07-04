@@ -7,7 +7,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 import AdminPostForm from '@/components/Admin/AdminPostForm.vue';
 
 export default {
@@ -17,18 +16,10 @@ export default {
   layout: 'admin',
   methods: {
     onSubmitted(postData) {
-      axios
-        .post(
-          'https://nuxt-blog-cbb7b-default-rtdb.asia-southeast1.firebasedatabase.app/posts.json',
-          { ...postData, updatedDate: new Date() }
-        )
-        .then((result) => {
-          this.$route.push('/admin');
-        })
-        .catch((e) => {
-          // eslint-disable-next-line no-console
-          console.log(e);
-        });
+      this.$store.dispatch('addPost', postData)
+      .then(() => {
+        this.$router.push('/admin');
+      })
     }
   }
 };

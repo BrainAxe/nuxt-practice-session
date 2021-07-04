@@ -24,26 +24,21 @@ export default {
       )
       .then((res) => {
         return {
-          loadedPost: res.data
+          loadedPost: { ...res.data, id: context.params.postId}
         };
       })
       .catch((e) => context.error(e));
   },
   methods: {
     onSubmitted(editedPost) {
-      axios
-        .put(
-          'https://nuxt-blog-cbb7b-default-rtdb.asia-southeast1.firebasedatabase.app/posts/' +
-            this.$route.params.postId +
-            '.json',
-          editedPost
-        )
-        .then((res) => {
-          this.$route.push('/admin');
-        }) 
+      this.$store
+        .dispatch('editPost', editedPost)
+        .then(() => {
+          this.$router.push('/admin');
+        })
         .catch((e) => {
           // eslint-disable-next-line no-console
-          console.log(e)
+          console.log(e);
         });
     }
   }
