@@ -55,8 +55,7 @@ export default {
   methods: {
     onSave() {
       // save the post
-      // eslint-disable-next-line no-console
-      console.log(this.editedPost);
+      this.$emit('submit', this.editedPost);
     },
     onCancel() {
       // navigate back

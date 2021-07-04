@@ -1,31 +1,49 @@
 <template>
   <div class="admin-new-post-page">
     <section class="new-post-form">
-      <AdminPostForm/>
+      <AdminPostForm @submit="onSubmitted" />
     </section>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
 import AdminPostForm from '@/components/Admin/AdminPostForm.vue';
 
 export default {
   components: {
     AdminPostForm
   },
-  layout: 'admin'
-}
+  layout: 'admin',
+  methods: {
+    onSubmitted(postData) {
+      axios
+        .post(
+          'https://nuxt-blog-cbb7b-default-rtdb.asia-southeast1.firebasedatabase.app/posts.json',
+          postData
+        )
+        .then((result) => {
+          // eslint-disable-next-line no-console
+          console.log(result);
+        })
+        .catch((e) => {
+          // eslint-disable-next-line no-console
+          console.log(e);
+        });
+    }
+  }
+};
 </script>
 
 <style scoped>
-  .new-post-form {
-    width: 90%;
-    margin: 20px auto;
-  }
+.new-post-form {
+  width: 90%;
+  margin: 20px auto;
+}
 
-  @media (min-width: 768px) {
-    .new-post-form {
-      width: 500px;
-    }
+@media (min-width: 768px) {
+  .new-post-form {
+    width: 500px;
   }
+}
 </style>
