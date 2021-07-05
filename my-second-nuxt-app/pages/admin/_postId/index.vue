@@ -15,6 +15,7 @@ export default {
     AdminPostForm
   },
   layout: 'admin',
+  middleware: ['auth'],
   asyncData(context) {
     return axios
       .get(

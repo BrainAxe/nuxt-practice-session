@@ -22,6 +22,7 @@ export default {
     AppButton
   },
   layout: 'admin',
+  middleware: 'auth',
   head: {
     title: "Admin Only!"
   },
