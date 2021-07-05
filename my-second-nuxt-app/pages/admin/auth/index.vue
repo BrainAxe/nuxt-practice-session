@@ -1,9 +1,13 @@
 <template>
   <div class="admin-auth-page">
     <div class="auth-container">
-      <form>
-        <AppControlInput type="email">E-Mail Address</AppControlInput>
-        <AppControlInput type="password">Password</AppControlInput>
+      <form @submit.prevent="onSubmit">
+        <AppControlInput v-model="email" type="email"
+          >E-Mail Address</AppControlInput
+        >
+        <AppControlInput v-model="password" type="password"
+          >Password</AppControlInput
+        >
         <AppButton type="submit">{{ isLogin ? 'Login' : 'Sign Up' }}</AppButton>
         <AppButton
           type="button"
@@ -18,6 +22,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import AppControlInput from '@/components/UI/AppControlInput';
 import AppButton from '@/components/UI/AppButton';
 
@@ -30,8 +35,36 @@ export default {
   layout: 'admin',
   data() {
     return {
+      email: '',
+      password: '',
       isLogin: true
     };
+  },
+  methods: {
+    onSubmit() {
+      let authUrl =
+        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' +
+        process.env.fBaseAPIKey;
+      if (!this.isLogin) {
+        authUrl =
+          'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' +
+          process.env.fBaseAPIKey;
+      }
+      axios
+        .post(authUrl, {
+          email: this.email,
+          password: this.password,
+          returnSecureToken: true
+        })
+        .then((result) => {
+          // eslint-disable-next-line no-console
+          console.log(result);
+        })
+        .catch((e) => {
+          // eslint-disable-next-line no-console
+          console.log(e);
+        });
+    }
   }
 };
 </script>

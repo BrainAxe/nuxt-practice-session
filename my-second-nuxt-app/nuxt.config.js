@@ -46,5 +46,9 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+  },
+
+  env: {
+    fBaseAPIKey: process.env.FIRE_BASE_API_KEY
   }
 }

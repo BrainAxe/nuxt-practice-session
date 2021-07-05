@@ -22,6 +22,9 @@ export default {
     AppButton
   },
   layout: 'admin',
+  head: {
+    title: "Admin Only!"
+  },
   computed: {
     loadedPosts() {
       return this.$store.getters.loadedPosts;
