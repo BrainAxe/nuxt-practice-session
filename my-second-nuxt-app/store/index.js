@@ -4,7 +4,8 @@ import axios from 'axios';
 const createStore = () => {
   return new Vuex.Store({
     state: {
-      loadedPosts: []
+      loadedPosts: [],
+      token: null
     },
     mutations: {
       setPosts(state, posts) {
@@ -19,6 +20,9 @@ const createStore = () => {
           (post) => post.id === editedPost.id
         );
         state.loadedPosts[postIndex] = editedPost;
+      },
+      setToken(state, token) {
+        state.token = token;
       }
     },
     actions: {
@@ -45,7 +49,7 @@ const createStore = () => {
         const createdPost = { ...post, updatedDate: new Date() };
         return axios
           .post(
-            'https://nuxt-blog-cbb7b-default-rtdb.asia-southeast1.firebasedatabase.app/posts.json',
+            'https://nuxt-blog-cbb7b-default-rtdb.asia-southeast1.firebasedatabase.app/posts.json?auth=' + vuexContext.state.token,
             createdPost
           )
           .then((result) => {
@@ -61,19 +65,42 @@ const createStore = () => {
       },
       editPost(vuexContext, editedPost) {
         return axios
-        .put(
-          'https://nuxt-blog-cbb7b-default-rtdb.asia-southeast1.firebasedatabase.app/posts/' +
-            editedPost.id +
-            '.json',
-          editedPost
-        )
-        .then((res) => {
-          vuexContext.commit('editPost', editedPost);
-        }) 
-        .catch((e) => {
-          // eslint-disable-next-line no-console
-          console.log(e)
-        });
+          .put(
+            'https://nuxt-blog-cbb7b-default-rtdb.asia-southeast1.firebasedatabase.app/posts/' +
+              editedPost.id +
+              '.json?auth=' + vuexContext.state.token,
+            editedPost
+          )
+          .then((res) => {
+            vuexContext.commit('editPost', editedPost);
+          })
+          .catch((e) => {
+            // eslint-disable-next-line no-console
+            console.log(e);
+          });
+      },
+      authenticateUser(vuexContext, authData) {
+        let authUrl =
+          'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' +
+          process.env.fBaseAPIKey;
+        if (!authData.isLogin) {
+          authUrl =
+            'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' +
+            process.env.fBaseAPIKey;
+        }
+        return axios
+          .post(authUrl, {
+            email: authData.email,
+            password: authData.password,
+            returnSecureToken: true
+          })
+          .then((result) => {
+            vuexContext.commit('setToken', result.data.idToken);
+          })
+          .catch((e) => {
+            // eslint-disable-next-line no-console
+            console.log(e);
+          });
       }
     },
     getters: {

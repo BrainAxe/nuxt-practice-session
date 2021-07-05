@@ -22,7 +22,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 import AppControlInput from '@/components/UI/AppControlInput';
 import AppButton from '@/components/UI/AppButton';
 
@@ -42,28 +41,13 @@ export default {
   },
   methods: {
     onSubmit() {
-      let authUrl =
-        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' +
-        process.env.fBaseAPIKey;
-      if (!this.isLogin) {
-        authUrl =
-          'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' +
-          process.env.fBaseAPIKey;
-      }
-      axios
-        .post(authUrl, {
-          email: this.email,
-          password: this.password,
-          returnSecureToken: true
-        })
-        .then((result) => {
-          // eslint-disable-next-line no-console
-          console.log(result);
-        })
-        .catch((e) => {
-          // eslint-disable-next-line no-console
-          console.log(e);
-        });
+       this.$store.dispatch('authenticateUser', {
+        isLogin: this.isLogin,
+        email: this.email,
+        password: this.password
+      }).then(() => {
+        this.$router.push('/admin');
+      })
     }
   }
 };
